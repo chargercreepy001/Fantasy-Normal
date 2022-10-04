@@ -52,6 +52,7 @@ let don = 0;
  
 client.on("messageCreate", async message => {
 
+  if (message.author.bot) return false;
   let cmd = message.content.toLowerCase();
     const prefix = '>';
     const args = message.content.trim().split(/ +/g);
