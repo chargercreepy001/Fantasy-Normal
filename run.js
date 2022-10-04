@@ -1,0 +1,1 @@
+Worker: node mainscript.js
