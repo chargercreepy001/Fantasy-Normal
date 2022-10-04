@@ -55,7 +55,32 @@ client.on("messageCreate", async message => {
   let cmd = message.content.toLowerCase();
     const prefix = '>';
     const args = message.content.trim().split(/ +/g);
-
+MemServers();
+    async function MemServers()
+    {
+     if (message.content.startsWith(`${prefix}membercount`))
+     {
+    
+     let TotalCount = message.guild.memberCount;
+     let Staffteam = message.guild.members.cache.filter(m => m.permissions.has(PermissionFlagsBits.ManageMessages)).size - message.guild.members.cache.filter(m => m.user.bot).size;
+      let humans = message.guild.members.cache.filter(m => !m.user.bot).size;
+  
+     let devrole = message.guild.roles.cache.find(m => m.name.toLowerCase().includes('developer'));
+     if (devrole)
+     {
+     let developers = message.guild.members.cache.filter(m => m.roles.cache.has(devrole.id));
+     let thedevs = developers.map(mdev => mdev.user.tag);
+     const thememembed = new EmbedBuilder().setTitle(`GuildMembers strength`).setDescription(`Total count: ${TotalCount}\n Humans: ${humans} \n Staff Team size: ${Staffteam} \n Bot developers: ${thedevs.join(',\n')}`)
+     message.channel.send({embeds: [thememembed]});
+     }
+  
+    else {
+      const thememembeds = new EmbedBuilder().setTitle(`GuildMembers strength`).setDescription(`Total count: ${TotalCount}\n Humans: ${humans} \n Staff Team size: ${Staffteam} \n Bot developers: N/A`);
+      message.channel.send({embeds: [thememembeds]})
+    }
+    }
+   }
+  
     Ban();
     async function Ban()
     {
@@ -172,6 +197,7 @@ async function unmute()
 
     if (b) 
     {
+      if (b.permissions.has(PermissionFlagsBits.Administrator)) return message.reply("`I am not a dumb, i know Administrators cannot be muted so there is no mean to 'unmute' them.`");
       try {
       b.timeout(1, `(${message.member.id}): No reason given`)
       await message.channel.send(`${b} was successfully unmuted by ${message.member.user.tag}`)
@@ -516,6 +542,44 @@ async function Unban()
       
     })
   })
+  }
+}
+  role();
+async function role()
+{
+if (cmd.startsWith(`${prefix}role`))
+  {
+
+    if (!message.guild.members.me.permissions.has(PermissionFlagsBits.ManageRoles)) return message.reply("I need ManageRoles permission!");
+  let mem = message.mentions.members.first() || message.guild.members.cache.get(args[1]);
+ const role_give = message.mentions.roles.first() || message.guild.roles.cache.get(args[2]);
+ if (!role_give) return message.channel.send('please put a valid role in the 2nd argument.');
+
+ if (!message.member.permissions.has(PermissionFlagsBits.ManageRoles)) return false;
+ 
+ else if (mem.roles.cache.has(role_give.id) && role_give < message.guild.members.me.roles.highest) 
+ {
+  mem.roles.remove(role_give).catch(ex => console.log(ex));
+  message.delete().then(message.channel.send(`:white_check_mark: Updated roles for ${mem.user.tag} [-]${role_give.name}]`));
+}
+  if (role_give < mem.roles.highest && !mem.roles.cache.has(role_give.id))
+ {
+  mem.roles.add(role_give).catch(ex => console.log(ex))
+  message.delete().then(message.channel.send(`:white_check_mark:Updated roles for ${mem.user.tag} [+]${role_give.name}]`))
+ }
+}
+  }
+  Say_Echo();
+  async function Say_Echo()
+{
+  if (cmd.startsWith(`${prefix}echo`))
+  {
+    let str_say = message.content.split(" ").slice(1).join(' ');
+    
+    
+      const say_repeat_embed = new EmbedBuilder().setTitle(`ECHO BY ${message.member.user.tag}`).setDescription(`${str_say}`).setColor('#00FF00');
+      if (str_say)
+      await message.channel.send({embeds: [say_repeat_embed]});
   }
 }
   
