@@ -3,8 +3,6 @@ const { Client, GatewayIntentBits, AuditLogEvent, EmbedBuilder, PermissionFlagsB
 
 //const AntiSpam = require("discord-anti-spam");
 const { REST, SlashCommandBuilder, Routes } = require('discord.js');
-
-
 const client = new Discord.Client({intents: 
   [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, 
     GatewayIntentBits.GuildMembers, GatewayIntentBits.MessageContent,
@@ -15,12 +13,10 @@ const client = new Discord.Client({intents:
 
 client.on("error", error => {
   console.log(error);
-
 })
 
 client.on('messageCreate', async msg => 
 {
-
   if (msg.content.startsWith(`>setup`))
   {
     let perms = "No";
@@ -48,8 +44,6 @@ let don = 0;
     }
     const logsem = new EmbedBuilder().setDescription(`> I have Administrator privileges: ${perms}\n > Channel log setup: Success \n > Suspicius Trap role setup: in progress`);
     const logsedit = new EmbedBuilder().setDescription(`> I have Administrator privileges: ${perms}\n > Channel log setup: Success \n > Suspicious Trap role setup: done! \n > Finishing up...`);
-   
-    
     msg.channel.send({embeds: [logsedit]});
   }
 })
@@ -314,7 +308,6 @@ async function sayit(boo)
     if (message.member.id !== '980321357516644412') return false;
     
     message.channel.send('`sayit command ^turned off^ `');
-    
     boo = 0;
 
   }
@@ -527,4 +520,4 @@ async function Unban()
 }
   
 })
-client.login('MTAyNDk0Nzg4NDE1MzY1MTIwMA.G1rHgW.B4rJzeK3OTbjoZd_dIVbK9sqSKUrv0RALU9UyA');
+client.login(process.env.mtoken);
