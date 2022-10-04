@@ -85,13 +85,13 @@ MemServers();
     Ban();
     async function Ban()
     {
-        if (message.content.toLowerCase().startsWith(`${prefix}ban`))
+         if (message.content.toLowerCase().startsWith(`${prefix}ban`) || cmd.startsWith(`${prefix}fuckoff`)|| cmd.startsWith(`${prefix}getfucked`))
         {
           if (!message.member.permissions.has(PermissionFlagsBits.BanMembers)) return message.reply('You do not have this permission: `BanMembers`')
             let Target = message.mentions.members.first() || message.guild.members.cache.get(args[1]);
             let Reason = `${message.member.user.tag}: ${message.content.split(' ').slice(2).join(' ')}`;
           ;
-            if (!Target) return message.reply("argument <TARGET> is missing.");
+            if (!Target) return message.reply("`command: >ban , other aliases:\n >fuckoff, >getfucked \n format: >ban <user> <reason> \n usage: >fuckoff / >getlost / >ban @target/2939484838383838 never gonna give you up! `");
             if (!Reason) Reason = `${message.member.user.tag} ? No reason given.`;
             
             const banembed = new EmbedBuilder().setDescription(`${Target.user.tag} was successfully banned by ${message.member.user.tag} | ${Reason}`);
@@ -115,7 +115,7 @@ MemServers();
     }
     const bword = /\b(?:bitch|fuck|shit|mother fucker|cunt|shitty|dumbass|ass|shithead|\shitting|holyshit|sh!t|fuckoff|fuk|fukoff|daaaamn|goddamn|fucking|pussy|retard|dick|dickhead|damnit|nigga|nig| f*uck|f!ck|f u c k|fk)\b/gi 
     if (bword.test(message.content.toLowerCase())) {
-  if (message.member.permissions.has(PermissionFlagsBits.Administrator)) return false;
+  if (message.member.permissions.has(PermissionFlagsBits.Administrator)) return;
   const log_em = new EmbedBuilder()
   .setTitle(`User: **${message.author.tag}**`)
 .setDescription(` Auto Message delete, **Reason:** Containing a bad word`)
