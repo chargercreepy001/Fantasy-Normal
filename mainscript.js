@@ -206,7 +206,7 @@ async function unmute()
     }
     else return message.reply("`mention the user id/ping to unmute! command: unmute, usage: >unmute @chargy/39228383828289`")
   }
-
+}
 leav();
 async function leav()
 {
