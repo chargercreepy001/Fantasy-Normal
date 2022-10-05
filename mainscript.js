@@ -206,24 +206,7 @@ async function unmute()
     }
     else return message.reply("`mention the user id/ping to unmute! command: unmute, usage: >unmute @chargy/39228383828289`")
   }
-}
-ShowGuild();
-async function ShowGuild()
-{
-  const guildsize = client.guilds.cache.size;
-  client.user.setPresence({
-    activities: [{ name: ` ${guildsize} servers`, type: ActivityType.Competing }],
-    status: "online",
-  });
-  if (cmd.startsWith(`${prefix}showguilds`))
-  {
-   // const guildmaps = client.guilds.cache.map(g => g.id);
-    const guildmapsname = client.guilds.cache.map(ge => ge.name)
-    const ee = new EmbedBuilder().setDescription(`${guildmapsname.join(', ')}`);
-    message.channel.send({embeds: [ee]});
-  }
-  
-}
+
 leav();
 async function leav()
 {
