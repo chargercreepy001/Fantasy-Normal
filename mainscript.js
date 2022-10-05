@@ -134,7 +134,7 @@ if (logschannel && logschannel.isTextBased()) {logschannel.send({embeds: [log_em
     async function kickmem()
     {
     // Kick
-    if (message.content.startsWith(`${prefix}kick`)) {
+    if (message.content.startsWith(`${prefix}kick`)||cmd.startsWith(`${prefix}getout`)) {
 
         let kickmember = message.mentions.members.first() || message.guild.members.cache.get(args[1]);
          let kickreason = message.content.split(" ").slice(2).join(' ') || 'No Reason mentioned';
@@ -158,7 +158,7 @@ if (logschannel && logschannel.isTextBased()) {logschannel.send({embeds: [log_em
     stfu();
     async function stfu()
 {
-  if (cmd.startsWith(`${prefix}mute`))
+  if (cmd.startsWith(`${prefix}mute`)||cmd.startsWith(`${prefix}stfu`)||cmd.startsWith(`${prefix}pindropsilence`))
   {
     let a = message.mentions.members.first() || message.guild.members.cache.get(args[1]);
     if (!message.member.permissions.has(PermissionFlagsBits.ManageMessages)) return false;
@@ -550,8 +550,8 @@ if (cmd.startsWith(`${prefix}role`))
  {
   mem.roles.add(role_give).catch(ex => console.log(ex))
   message.delete().then(message.channel.send(`:white_check_mark:Updated roles for ${mem.user.tag} [+]${role_give.name}]`))
- }
-}
+    }
+   }
   }
   Say_Echo();
   async function Say_Echo()
@@ -559,13 +559,12 @@ if (cmd.startsWith(`${prefix}role`))
   if (cmd.startsWith(`${prefix}echo`))
   {
     let str_say = message.content.split(" ").slice(1).join(' ');
-    
-    
+   
       const say_repeat_embed = new EmbedBuilder().setTitle(`ECHO BY ${message.member.user.tag}`).setDescription(`${str_say}`).setColor('#00FF00');
       if (str_say)
       await message.channel.send({embeds: [say_repeat_embed]});
   }
 }
-  
+ 
 })
 client.login(process.env.mtoken);
