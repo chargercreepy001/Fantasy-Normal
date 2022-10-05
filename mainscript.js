@@ -23,7 +23,7 @@ client.on('messageCreate', async msg =>
     if (!msg.guild.members.me.permissions.has(PermissionFlagsBits.Administrator)) return msg.reply('I need `Administrator` Permissions in order to setup everything.');
    else perms = ":white_check_mark:";
 let sleep = ms => new Promise(interval => setTimeout(interval, ms));
-    msg.guild.channels.create({name: 'mushy-logs', type: ChannelType.GuildText, permissionOverwrites: [{
+    msg.guild.channels.create({name: 'fantasy-logs', type: ChannelType.GuildText, permissionOverwrites: [{
       id: msg.guild.roles.everyone,
       deny: ['ViewChannel', 'SendMessages']
     }
@@ -71,12 +71,12 @@ MemServers();
      {
      let developers = message.guild.members.cache.filter(m => m.roles.cache.has(devrole.id));
      let thedevs = developers.map(mdev => mdev.user.tag);
-     const thememembed = new EmbedBuilder().setTitle(`GuildMembers strength`).setDescription(`Total count: ${TotalCount}\n Humans: ${humans} \n Staff Team size: ${Staffteam} \n Bot developers: ${thedevs.join(',\n')}`)
+     const thememembed = new EmbedBuilder().setTitle(`GuildMembers strength`).setDescription(`Total count: ${TotalCount}\n Humans: ${humans} \n Staff Team size: ${Staffteam} \n Bot developers: ${thedevs.join(',\n')}`).setThumbnail(message.guild.bannerURL()).setColor(client.user.accentColor);
      message.channel.send({embeds: [thememembed]});
      }
   
     else {
-      const thememembeds = new EmbedBuilder().setTitle(`GuildMembers strength`).setDescription(`Total count: ${TotalCount}\n Humans: ${humans} \n Staff Team size: ${Staffteam} \n Bot developers: N/A`);
+      const thememembeds = new EmbedBuilder().setTitle(`GuildMembers strength`).setDescription(`Total count: ${TotalCount}\n Humans: ${humans} \n Staff Team size: ${Staffteam} \n Bot developers: N/A`).setThumbnail(message.guild.bannerURL()).setColor(client.user.accentColor);
       message.channel.send({embeds: [thememembeds]})
     }
     }
@@ -87,11 +87,11 @@ MemServers();
     {
          if (message.content.toLowerCase().startsWith(`${prefix}ban`) || cmd.startsWith(`${prefix}fuckoff`)|| cmd.startsWith(`${prefix}getfucked`))
         {
-          if (!message.member.permissions.has(PermissionFlagsBits.BanMembers)) return message.reply('You do not have this permission: `BanMembers`')
+          if (!message.member.permissions.has(PermissionFlagsBits.BanMembers)) return;
             let Target = message.mentions.members.first() || message.guild.members.cache.get(args[1]);
             let Reason = `${message.member.user.tag}: ${message.content.split(' ').slice(2).join(' ')}`;
           ;
-            if (!Target) return message.reply("`command: >ban , other aliases:\n >fuckoff, >getfucked \n format: >ban <user> <reason> \n usage: >fuckoff / >getlost / >ban @target/2939484838383838 never gonna give you up! `");
+            if (!Target) return message.reply("`command: >ban\n other aliases:\n >fuckoff, >getfucked \n format: >ban <user> <reason> \n usage: >fuckoff / >getlost / >ban @target/2939484838383838 never gonna give you up! `");
             if (!Reason) Reason = `${message.member.user.tag} ? No reason given.`;
             
             const banembed = new EmbedBuilder().setDescription(`${Target.user.tag} was successfully banned by ${message.member.user.tag} | ${Reason}`);
@@ -115,7 +115,7 @@ MemServers();
     }
     const bword = /\b(?:bitch|fuck|shit|mother fucker|cunt|shitty|dumbass|ass|shithead|\shitting|holyshit|sh!t|fuckoff|fuk|fukoff|daaaamn|goddamn|fucking|pussy|retard|dick|dickhead|damnit|nigga|nig| f*uck|f!ck|f u c k|fk)\b/gi 
     if (bword.test(message.content.toLowerCase())) {
-  if (message.member.permissions.has(PermissionFlagsBits.Administrator)) return;
+  if (message.member.permissions.has(PermissionFlagsBits.Administrator)||message.member.permissions.has(PermissionFlagsBits.BanMembers)) return;
   const log_em = new EmbedBuilder()
   .setTitle(`User: **${message.author.tag}**`)
 .setDescription(` Auto Message delete, **Reason:** Containing a bad word`)
@@ -145,12 +145,16 @@ if (logschannel && logschannel.isTextBased()) {logschannel.send({embeds: [log_em
       
         if (kickmember) 
         {
-          if (!kickmember.kickable || kickmember.permissions.has(PermissionFlagsBits.KickMembers)) return message.channel.send(":x: `I can't kick This User. The user is either Mod/Admin or you don't have permission to ban the user.`");
+          if (!kickmember.kickable || kickmember.permissions.has(PermissionFlagsBits.KickMembers)) return message.channel.send(":x: `I can't kick This User. The user is either Mod/Admin or i don't have permission to kick the user.`");
 
           else
           {
-            await kickmember.kick(`${message.member.user.tag}: ${kickreason}`);
-           await message.channel.send(`:white_check_mark: kicked **${kickmember.user.tag}** | **${kickreason}**)`);
+            try {
+            const kickmbed = new EmbedBuilder().setDescription(`${kickmember.user.tag} was successfully kicked by ${message.member.user.tag} | ${Reason}`);
+            kickmember.send(`you were being kicked from **${message.guild.name}** | ${kickreason}`).then(kickmember.kick(`${message.member.user.tag}: ${kickreason}`)).catch(error => console.log(error));;
+           await message.channel.send({embeds: [kickmbed]});
+            }
+            catch (Feee) { message.reply("i couldn't perform that action."); }
           }
        }     
      }
@@ -164,7 +168,7 @@ if (logschannel && logschannel.isTextBased()) {logschannel.send({embeds: [log_em
     if (!message.member.permissions.has(PermissionFlagsBits.ManageMessages)) return false;
 if (a)
 {
-    if (a.permissions.has(PermissionFlagsBits.Administrator)) return message.channel.send(":x: `This user has {Administrator} permission. I cannot mute them.`");
+    if (a.permissions.has(PermissionFlagsBits.Administrator)) return message.reply(":x: `This user has {Administrator} permission. I cannot mute them.`");
 
     
     let reasonbody = message.content.split(" ").slice(3).join(' ');
@@ -181,7 +185,7 @@ if (sh === null) sh = 1;
       else if (res.toLowerCase().endsWith('m')) try {a.timeout(sh * 60 * 1000, timeoutreason )} catch(e) { return message.reply("i cannot mute this user!")}
       else if (res.endsWith('')) return message.channel.send("``` format: \n >mute <@member/id> <time> <reason> \n Usage: \n >mute  @chargy/9192384848383 2h spamming```");
       
-      message.channel.send("successfully muted this user.");
+      message.reply(" :white_check_mark:`successfully muted this user.`");
     }
     else return message.reply("```format: \n >mute <@member/id> <time> <reason> \n Usage: \n >mute  @chargy/9192384848383 2h spamming```").catch(error => console.log(error));
     
@@ -341,7 +345,7 @@ async function faqmod()
     Avoid begging for it or you will be warned.
     Mod Application are there and you must apply.
     They are always open unless we have to many staff.
-    Mod application can be accessed in ${hiring.toString()}`).setThumbnail('https://cdn.discordapp.com/emojis/1017823496992206868.webp?size=128&quality=lossless');
+   please ask the admin or any other staff for further information. `).setThumbnail('https://cdn.discordapp.com/emojis/1017823496992206868.webp?size=128&quality=lossless');
     message.reply({embeds: [aler], allowedMentions: {
       repliedUser: false
     }});
@@ -412,7 +416,7 @@ async function set_status()
     
   }
 }
-Apply();
+
 
 async function Apply()
 {
