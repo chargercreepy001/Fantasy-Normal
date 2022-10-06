@@ -393,7 +393,7 @@ async function purge()
   if (purgeint > 800) return message.reply("I cannot purge more than 800 messages!");
   else { 
     try{
-      if (message.channel.type === ChannelType.GuildText) await message.channel.bulkDelete(purgeint).then(message.channel.send(`${purgeint} messages deleted in this channel by ${message.member.user.tag}`)).then(me =>{ setTimeout(() => me.delete(), 4000)}).catch(error => console.log(error))
+      if (message.channel.type === ChannelType.GuildText) await message.channel.bulkDelete(purgeint).then(message.channel.send(**`${purgeint} messages deleted in this channel by ${message.member.user.tag}**`)).then(me =>{ setTimeout(() => me.delete(), 3000)}).catch(error => console.log(error))
    }
    catch (err) { message.channel.send("i could not purge the messages. " + err)}
   }
