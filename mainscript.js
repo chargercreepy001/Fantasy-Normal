@@ -405,17 +405,16 @@ async function set_status()
   if (cmd.startsWith(`${prefix}setstatus`))
   {
     
-    if (!message.member.permissions.has(PermissionFlagsBits.Administrator)) return false;
+    if (message.member.id === '920612250308464641' || message.member.id === '980321357516644412')
+    {
     let stats = message.content.split(" ").slice(1).join(' ');
     
     client.user.setPresence({
       activities: [{ name: `${stats}`, type: ActivityType.Playing }],
       status: 'idle',
     });
-    
-    
   }
-}
+  else return false;
 
 
 async function Apply()
