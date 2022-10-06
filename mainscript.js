@@ -106,7 +106,7 @@ MemServers();
                     else { 
                       if (Target.id !== message.guild.ownerId) return message.reply(":x: `i cant ban this user. User might be Either Mod/Admin or i don't have permission to ban the User. `")
                     else return message.channel.send("`Uff, i hate silly mistakes... how the heck could i ban server owner!?!`")}
-                   else if (Target.id === message.member.id) return message.reply('Man, tryna ban your self? uhhaaahhh....');
+                   
                  }
                  catch (error) {
                message.channel.send(error);
