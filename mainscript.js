@@ -105,7 +105,8 @@ MemServers();
 
                     else { 
                       if (Target.id !== message.guild.ownerId) return message.reply(":x: `i cant ban this user. User might be Either Mod/Admin or i don't have permission to ban the User. `")
-                    else return message.channel.send("`Man, i liked that clown joke tryna ban my owner huh? XD`")}
+                    else return message.channel.send("`Uff, i hate silly mistakes... how the heck could i ban server owner!?!`")}
+                   else if (Target.id === message.member.id) return message.reply('Man, tryna ban your self? uhhaaahhh....');
                  }
                  catch (error) {
                message.channel.send(error);
@@ -150,7 +151,7 @@ if (logschannel && logschannel.isTextBased()) {logschannel.send({embeds: [log_em
           else
           {
             try {
-            const kickmbed = new EmbedBuilder().setDescription(`${kickmember.user.tag} was successfully kicked by ${message.member.user.tag} | ${Reason}`);
+            const kickmbed = new EmbedBuilder().setDescription(`${kickmember.user.tag} was successfully kicked by ${message.member.user.tag} | ${kickreason}`);
             kickmember.send(`you were being kicked from **${message.guild.name}** | ${kickreason}`).then(kickmember.kick(`${message.member.user.tag}: ${kickreason}`)).catch(error => console.log(error));;
            await message.channel.send({embeds: [kickmbed]});
             }
@@ -183,8 +184,7 @@ if (sh === null) sh = 1;
       
       try{ a.timeout(sh * 60 * 1000 * 60, timeoutreason)} catch(erro) { return message.reply("i cannot mute this user.")}
       else if (res.toLowerCase().endsWith('m')) try {a.timeout(sh * 60 * 1000, timeoutreason )} catch(e) { return message.reply("i cannot mute this user!")}
-      else if (res.endsWith('')) return message.channel.send("``` format: \n >mute <@member/id> <time> <reason> \n Usage: \n >mute  @chargy/9192384848383 2h spamming```");
-      
+      else if (res.endsWith('')) return message.channel.send("```command: >mute \n other aliases: \n >stfu, >pindropsilence \n format: \n >mute <@member/id> <time> <reason> \n Usage: \n >mute  @chargy/9192384848383 2h spamming | error: time in hour/minute is not mentioned!```");
       message.reply(" :white_check_mark:`successfully muted this user.`");
     }
     else return message.reply("```format: \n >mute <@member/id> <time> <reason> \n Usage: \n >mute  @chargy/9192384848383 2h spamming```").catch(error => console.log(error));
@@ -234,8 +234,8 @@ async function aboutme()
   if (cmd.startsWith(`botinfo ${client.user.toString()}`))
 
   {
-    const helpem = new EmbedBuilder().setTitle('WHAT I CAN DO?').setDescription(`I have all basic Moderation commands.[for command lists, type m!help] \n
-    **FUN COMMANDS:** \ntestluck <object> <object2> <object3> <object4> <@usermention> \n m!rickroll <times> <@mentionuser> \n **(fake dyno commands lol)**: \n.warn <@user> <reason> \n .ban <@user> <reason> \n **BASIC PROBLEM SOLVER:** \nMod faq. \n alerting for pinging owner for no reason. \n **AUTO MOD:**\n Anti spam feature. `).setColor('#709ff1');
+    const helpem = new EmbedBuilder().setTitle('WHAT I CAN DO?').setDescription(`I have all basic Moderation commands.[for command lists, type >help] \n
+    **Premium COMMANDS:** \n spinwheel <object> <object2> <object3> <object4> <@usermention> \n m!rickroll <times> <@mentionuser> \n **BASIC PROBLEM SOLVER:** \nMod faq. \n alerting for pinging owner for no reason. \n **AUTO MOD:**\n Anti spam feature. `).setColor('#709ff1');
 
     await message.reply({embeds: [helpem], allowedMentions: {
       repliedUser: false
@@ -391,7 +391,7 @@ async function purge()
   if (purgeint > 800) return message.reply("I cannot purge more than 800 messages!");
   else { 
     try{
-   if (message.channel.type === ChannelType.GuildText) await message.channel.bulkDelete(purgeint).then(message.channel.send(`${purgeint} messages deleted in this channel by ${message.member.user.tag}`)).catch(erro => console.log(erro));
+      if (message.channel.type === ChannelType.GuildText) await message.channel.bulkDelete(purgeint).then(message.channel.send(`${purgeint} messages deleted in this channel by ${message.member.user.tag}`)).then(me =>{ setTimeout(() => me.delete(), 4000)}).catch(error => console.log(error))
    }
    catch (err) { message.channel.send("i could not purge the messages. " + err)}
   }
