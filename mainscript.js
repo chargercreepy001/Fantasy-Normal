@@ -531,6 +531,8 @@ async function Unban()
   })
   }
 }
+  }
+}
   role();
 async function role()
 {
