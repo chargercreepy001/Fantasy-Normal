@@ -385,6 +385,7 @@ async function purge()
 {
   if (cmd.startsWith(`${prefix}purge`))
   {
+    if (!message.member.permissions.has(PermissionFlagsBits.ManageMessages)) return;
     const sleep = ms => new Promise(interval => setTimeout(interval, ms));
   let purgecount = message.content.split(" ").slice(1).join(' ');
   let purgeint = parseInt(purgecount);
