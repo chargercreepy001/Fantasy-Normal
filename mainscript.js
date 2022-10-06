@@ -90,7 +90,7 @@ MemServers();
           if (!message.member.permissions.has(PermissionFlagsBits.BanMembers)) return;
             let Target = message.mentions.members.first() || message.guild.members.cache.get(args[1]);
             let Reason = `${message.member.user.tag}: ${message.content.split(' ').slice(2).join(' ')}`;
-          ;
+          if (Target.id === message.member.id) return message.reply("` Uff, Tryna Ban your self? bruh...`");
             if (!Target) return message.reply("`command: >ban\n other aliases:\n >fuckoff, >getfucked \n format: >ban <user> <reason> \n usage: >fuckoff / >getlost / >ban @target/2939484838383838 never gonna give you up! `");
             if (!Reason) Reason = `${message.member.user.tag} ? No reason given.`;
             
