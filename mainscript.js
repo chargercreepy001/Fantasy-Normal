@@ -15,7 +15,7 @@ client.on("error", error => {
   console.log(error);
 })
 
-client.on('messageCreate', async msg => 
+client.on('messageCreate', async message => 
 {
   
   const sleep = ms => new Promise(interval => setTimeout(interval, ms));
