@@ -94,7 +94,7 @@ MemServers();
             if (!Target) return message.reply("`command: >ban\n other aliases:\n >fuckoff, >getfucked \n format: >ban <user> <reason> \n usage: >fuckoff / >getlost / >ban @target/2939484838383838 never gonna give you up! `");
             if (!Reason) Reason = `${message.member.user.tag} ? No reason given.`;
             
-            const banembed = new EmbedBuilder().setDescription(`${Target.user.tag} was successfully banned by ${message.member.user.tag} | ${Reason}`);
+            const banembed = new EmbedBuilder().setDescription(`${Target.user.tag} was successfully banned by  **${Reason}**`).setColor('#a70707')
     
                  try{
                     if (Target.bannable && !Target.permissions.has(PermissionFlagsBits.BanMembers))
@@ -124,7 +124,7 @@ MemServers();
 .setColor('#7D0608');
 
     
-const logschannel = message.guild.channels.cache.find(c => c.name.includes('mushy-logs'))
+const logschannel = message.guild.channels.cache.find(c => c.name.includes('fantasy-logs'))
 
 try{ message.delete({timeout: 2000}).then(message.channel.send(`**${message.member.user.tag}** Watch your language.`))
 if (logschannel && logschannel.isTextBased()) {logschannel.send({embeds: [log_em]})
@@ -152,7 +152,7 @@ if (logschannel && logschannel.isTextBased()) {logschannel.send({embeds: [log_em
           else
           {
             try {
-            const kickmbed = new EmbedBuilder().setDescription(`${kickmember.user.tag} was successfully kicked by ${message.member.user.tag} | ${kickreason}`);
+            const kickmbed = new EmbedBuilder().setDescription(`${kickmember.user.tag} was successfully kicked by ${message.member.user.tag} | ${kickreason}`).setColor('#a70707');
             kickmember.send(`you were being kicked from **${message.guild.name}** | ${kickreason}`).then(kickmember.kick(`${message.member.user.tag}: ${kickreason}`)).catch(error => console.log(error));;
            await message.channel.send({embeds: [kickmbed]});
             }
