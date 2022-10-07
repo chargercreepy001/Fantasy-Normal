@@ -71,12 +71,12 @@ MemServers();
      {
      let developers = message.guild.members.cache.filter(m => m.roles.cache.has(devrole.id));
      let thedevs = developers.map(mdev => mdev.user.tag);
-     const thememembed = new EmbedBuilder().setTitle(`GuildMembers strength`).setDescription(`Total count: ${TotalCount}\n Humans: ${humans} \n Staff Team size: ${Staffteam} \n Bot developers: ${thedevs.join(',\n')}`).setThumbnail(message.guild.bannerURL()).setColor(client.user.accentColor);
+     const thememembed = new EmbedBuilder().setTitle(`GuildMembers strength`).setDescription(`Total count: ${TotalCount}\n Humans: ${humans} \n Staff Team size: ${Staffteam} \n Bot developers: ${thedevs.join(',\n')}`).setThumbnail(message.guild.bannerURL()).setColor('#ad1010');
      message.channel.send({embeds: [thememembed]});
      }
   
     else {
-      const thememembeds = new EmbedBuilder().setTitle(`GuildMembers strength`).setDescription(`Total count: ${TotalCount}\n Humans: ${humans} \n Staff Team size: ${Staffteam} \n Bot developers: N/A`).setThumbnail(message.guild.bannerURL()).setColor(client.user.accentColor);
+      const thememembeds = new EmbedBuilder().setTitle(`GuildMembers strength`).setDescription(`Total count: ${TotalCount}\n Humans: ${humans} \n Staff Team size: ${Staffteam} \n Bot developers: N/A`).setThumbnail(message.guild.bannerURL()).setColor('#ad1010');
       message.channel.send({embeds: [thememembeds]})
     }
     }
