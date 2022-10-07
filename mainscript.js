@@ -510,7 +510,7 @@ const thefirst = message.member;
      await message.channel.send({embeds: [info_new]});
         
      }
-    }
+    
 }
 Unban();
 async function Unban()
@@ -518,6 +518,8 @@ async function Unban()
   if (cmd.startsWith(">unban"))
   {
     let unbanid = message.content.split(" ").slice(1).join(' ');
+    if (unbanid)
+    {
     if (!message.member.permissions.has(PermissionFlagsBits.BanMembers)) return false;
   message.guild.bans.fetch().then(bans => {
     bans.forEach(baned => {
@@ -527,14 +529,18 @@ async function Unban()
         message.channel.send(`ID: ${unbanid} was unbanned by ${message.member.user.tag}`);
         } catch (usererror) { message.channel.send("i couldn't unban them.")}
       }
-      
-      
     })
   })
+    
+}
+    else return message.reply('`command: >unban \n format: >unban <id> \n usage: >unban 92838847732772')
   }
 }
-  }
-}
+
+
+      
+
+
   role();
 async function role()
 {
@@ -542,8 +548,9 @@ if (cmd.startsWith(`${prefix}role`))
   {
 
     if (!message.guild.members.me.permissions.has(PermissionFlagsBits.ManageRoles)) return message.reply("I need ManageRoles permission!");
-  let mem = message.mentions.members.first() || message.guild.members.cache.get(args[1]);
- const role_give = message.mentions.roles.first() || message.guild.roles.cache.get(args[2]);
+  let mem = message.mentions.members.first() || message.guild.members.cache.get(args[1]) || message.guild.members.cache.find(m => m.user.username.toLowerCase().includes(args[2]));
+ const role_give = message.mentions.roles.first() || message.guild.roles.cache.get(args[2]) || message.guild.roles.cache.find(r => r.name.toLowerCase().includes(args[2]));
+
  if (!role_give) return message.channel.send('please put a valid role in the 2nd argument.');
 
  if (!message.member.permissions.has(PermissionFlagsBits.ManageRoles)) return false;
@@ -571,7 +578,11 @@ if (cmd.startsWith(`${prefix}role`))
       if (str_say)
       await message.channel.send({embeds: [say_repeat_embed]});
   }
-}
+ }
+  }
+  }
+  }
+})
  
 })
 client.login(process.env.mtoken);
