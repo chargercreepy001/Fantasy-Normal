@@ -71,12 +71,12 @@ MemServers();
      {
      let developers = message.guild.members.cache.filter(m => m.roles.cache.has(devrole.id));
      let thedevs = developers.map(mdev => mdev.user.tag);
-     const thememembed = new EmbedBuilder().setTitle(`GuildMembers strength`).setDescription(`Total count: ${TotalCount}\n Humans: ${humans} \n Staff Team size: ${Staffteam} \n Bot developers: ${thedevs.join(',\n')}`).setThumbnail(message.guild.bannerURL()).setColor('#ad1010');
+     const thememembed = new EmbedBuilder().setTitle(`GuildMembers strength`).setDescription(`Total count: ${TotalCount}\n Humans: ${humans} \n Staff Team size: ${Staffteam} \n Bot developers: ${thedevs.join(',\n')}`).setThumbnail(message.guild.bannerURL()).setColor(client.user.accentColor);
      message.channel.send({embeds: [thememembed]});
      }
   
     else {
-      const thememembeds = new EmbedBuilder().setTitle(`GuildMembers strength`).setDescription(`Total count: ${TotalCount}\n Humans: ${humans} \n Staff Team size: ${Staffteam} \n Bot developers: N/A`).setThumbnail(message.guild.bannerURL()).setColor('#ad1010');
+      const thememembeds = new EmbedBuilder().setTitle(`GuildMembers strength`).setDescription(`Total count: ${TotalCount}\n Humans: ${humans} \n Staff Team size: ${Staffteam} \n Bot developers: N/A`).setThumbnail(message.guild.bannerURL()).setColor(client.user.accentColor);
       message.channel.send({embeds: [thememembeds]})
     }
     }
@@ -90,16 +90,15 @@ MemServers();
           if (!message.member.permissions.has(PermissionFlagsBits.BanMembers)) return;
             let Target = message.mentions.members.first() || message.guild.members.cache.get(args[1]);
             let Reason = `${message.member.user.tag}: ${message.content.split(' ').slice(2).join(' ')}`;
-          
+       //   if (Target.id === message.member.id) return message.reply("` Uff, Tryna Ban your self? bruh...`");
             if (!Target) return message.reply("`command: >ban\n other aliases:\n >fuckoff, >getfucked \n format: >ban <user> <reason> \n usage: >fuckoff / >getlost / >ban @target/2939484838383838 never gonna give you up! `");
             if (!Reason) Reason = `${message.member.user.tag} ? No reason given.`;
             
-            const banembed = new EmbedBuilder().setDescription(`${Target.user.tag} was successfully banned by  **${Reason}**`).setColor('#a70707')
+            const banembed = new EmbedBuilder().setDescription(`${Target.user.tag} was successfully banned by ${message.member.user.tag}`).setColor('#a70707')
     
                  try{
                     if (Target.bannable && !Target.permissions.has(PermissionFlagsBits.BanMembers))
                     {
-                      
                       Target.send(`You were banned from ${message.guild.name} for reason: ${Reason}`).then(Target.ban({ reason: Reason}));
                       await message.channel.send({embeds: [banembed]});
                     }
@@ -124,7 +123,7 @@ MemServers();
 .setColor('#7D0608');
 
     
-const logschannel = message.guild.channels.cache.find(c => c.name.includes('fantasy-logs'))
+const logschannel = message.guild.channels.cache.find(c => c.name.includes('mushy-logs'))
 
 try{ message.delete({timeout: 2000}).then(message.channel.send(`**${message.member.user.tag}** Watch your language.`))
 if (logschannel && logschannel.isTextBased()) {logschannel.send({embeds: [log_em]})
@@ -141,9 +140,10 @@ if (logschannel && logschannel.isTextBased()) {logschannel.send({embeds: [log_em
         let kickmember = message.mentions.members.first() || message.guild.members.cache.get(args[1]);
          let kickreason = message.content.split(" ").slice(2).join(' ') || 'No Reason mentioned';
     
+        
      if (!message.member.permissions.has(PermissionFlagsBits.KickMembers)) return false;
     
-        if (!kickmember) return message.channel.send("`command: >kick \n other aliases:\n >getout \n usage:\n >kick\>getout @Mushy/928842827277 being soo mean to me `");
+        if (!kickmember) return message.channel.send("argument <Target> is missing.");
       
         if (kickmember) 
         {
@@ -152,7 +152,7 @@ if (logschannel && logschannel.isTextBased()) {logschannel.send({embeds: [log_em
           else
           {
             try {
-            const kickmbed = new EmbedBuilder().setDescription(`${kickmember.user.tag} was successfully kicked by ${message.member.user.tag} | ${kickreason}`).setColor('#a70707');
+            const kickmbed = new EmbedBuilder().setDescription(`${kickmember.user.tag} was successfully kicked by ${message.member.user.tag} | ${kickreason}`);
             kickmember.send(`you were being kicked from **${message.guild.name}** | ${kickreason}`).then(kickmember.kick(`${message.member.user.tag}: ${kickreason}`)).catch(error => console.log(error));;
            await message.channel.send({embeds: [kickmbed]});
             }
@@ -342,7 +342,7 @@ async function faqmod()
   {
     const hiring = message.guild.channels.cache.find(m => m.id === '1019561942198788117');
     
-    const aler = new EmbedBuilder().setTitle(' Mod faq').setDescription(` ${message.guild.name} does not offer mod or any staff roles for free.
+    const aler = new EmbedBuilder().setTitle(' Mod faq').setDescription(`${message.guild.name} does not offer mod or any staff roles for free.
     Avoid begging for it or you will be warned.
     Mod Application are there and you must apply.
     They are always open unless we have to many staff.
@@ -353,18 +353,7 @@ async function faqmod()
   }
 }
 
-   async function radarcheck()
-   {
-  let m = message;
-   if (m > 3)
-  {
-    try {
-     await message.member.timeout(60 * 60 * 1000, "mentioning large number of member of people in short time");
-      await message.channel.send(`${message.member.user.tag} tried to ping more than 1/2 people of this guild! `);
-    } catch (err) { }
-   }
-  
-   }
+   
    afk();
 async function afk()
 {
@@ -393,7 +382,7 @@ async function purge()
   if (purgeint > 800) return message.reply("I cannot purge more than 800 messages!");
   else { 
     try{
-      if (message.channel.type === ChannelType.GuildText) await message.channel.bulkDelete(purgeint + 1).then(message.channel.send(`**${purgeint} messages deleted in this channel by ${message.member.user.tag}**`)).then(me =>{ setTimeout(() => me.delete(), 3000)}).catch(error => console.log(error))
+      if (message.channel.type === ChannelType.GuildText) await message.channel.bulkDelete(purgeint).then(message.channel.send(`${purgeint} messages deleted in this channel by ${message.member.user.tag}`)).then(me =>{ setTimeout(() => me.delete(), 4000)}).catch(error => console.log(error))
    }
    catch (err) { message.channel.send("i could not purge the messages. " + err)}
   }
@@ -417,7 +406,8 @@ async function set_status()
     });
   }
   else return false;
-
+  }
+}
 
 async function Apply()
 {
@@ -436,7 +426,7 @@ async function StartsApplicationInDm()
 Spinwheel();
 async function Spinwheel()
 {
- if (cmd.startsWith('spinwheel'))
+ if (cmd.startsWith('testluck'))
  {
   const args = message.content.trim().split(/ +/g);
   let fst = args[1];
@@ -498,10 +488,12 @@ const thefirst = message.member;
     }); // sending the reply to the main user
     }
   }
+}
   CmdInfo();
   async function CmdInfo()
 {
-    if (message.content.startsWith(`${prefix}help`)) {
+    if (message.content.startsWith(`${prefix}help`))
+     {
   
         const helpebd = new EmbedBuilder().setTitle("List of Commands").setDescription(` (1) ${prefix}rickroll <@user> <times> (just for fun :D) \n (2) ${prefix}kick <@user> <reason> (optional for reason)\n (3) ${prefix}ban <@user> <reason>\n (4) ${prefix}calc <int> <operationsign> <int2> \n(5) !>roleall+ <role> (gives a role to all the member)\n (6) !>roleall- <role> (removes a role from all members)\n (8) ${prefix}role <@member> <roleidonly> (removes/adds role from member)\n (8) ${prefix}getinfo <userid> (gets user info)\n  Feature: AutoMod Anti Spam `).setColor('#709ff1')
         message.react("☑️");
@@ -511,7 +503,9 @@ const thefirst = message.member;
         
      }
     
+
 }
+
 Unban();
 async function Unban()
 {
@@ -526,16 +520,21 @@ async function Unban()
       if (baned.user.id === unbanid) {
         try {
         message.guild.members.unban(baned.user.id, `unbanned by ${message.member.user.tag}`);
-        message.channel.send(`ID: ${unbanid} was unbanned by ${message.member.user.tag}`);
+        message.channel.send( {embeds: [{
+          description: `ID: ${unbanid} was unbanned by ${message.member.user.tag}`,
+          color: ''
+        }]});
         } catch (usererror) { message.channel.send("i couldn't unban them.")}
       }
     })
   })
-    
-}
-    else return message.reply('`command: >unban \n format: >unban <id> \n usage: >unban 92838847732772')
+    }
+    else return message.reply("mention a user id to unban!");
   }
 }
+  
+
+
 
 
       
@@ -567,6 +566,7 @@ if (cmd.startsWith(`${prefix}role`))
     }
    }
   }
+
   Say_Echo();
   async function Say_Echo()
 {
@@ -579,10 +579,35 @@ if (cmd.startsWith(`${prefix}role`))
       await message.channel.send({embeds: [say_repeat_embed]});
   }
  }
-  }
-  }
-  }
+  
+  
 })
- 
+
+client.on("messageDelete", async message => {
+  
+  radarcheck();
+  async function radarcheck()
+   {
+   
+  let role = message.mentions.roles.first();
+
+  let m = message.guild.roles.cache.get(role.id).members.size;
+   if (m > 1/2 * message.guild.memberCount || m === 1/2 * message.guild.memberCount)
+  {
+    if (message.member.permissions.has(PermissionFlagsBits.Administrator)) return message.channel.send({ embeds: [{
+      title: 'Massive Ping detected',
+      description: `${message.member.user.toString()} ghost pinged majority of people in this guild! `
+      }]})
+      else {
+    try {
+     await message.member.timeout(60 * 60 * 1000, "mentioning large number of member of people in short time");
+      await message.channel.send(`${message.member.user.tag} tried to ping more than 1/2 people of this guild! `);
+    } catch (err) { }
+   }
+  }
+  
+   }
+  
+  
 })
 client.login(process.env.mtoken);
