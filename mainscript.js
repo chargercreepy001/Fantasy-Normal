@@ -143,7 +143,7 @@ if (logschannel && logschannel.isTextBased()) {logschannel.send({embeds: [log_em
     
      if (!message.member.permissions.has(PermissionFlagsBits.KickMembers)) return false;
     
-        if (!kickmember) return message.channel.send("argument <Target> is missing.");
+        if (!kickmember) return message.channel.send("`command: >kick \n other aliases:\n >getout \n usage:\n >kick\>getout @Mushy/928842827277 being soo mean to me `");
       
         if (kickmember) 
         {
@@ -342,7 +342,7 @@ async function faqmod()
   {
     const hiring = message.guild.channels.cache.find(m => m.id === '1019561942198788117');
     
-    const aler = new EmbedBuilder().setTitle(' Mod faq').setDescription(`Mushy’s Design does not offer mod or any staff roles for free.
+    const aler = new EmbedBuilder().setTitle(' Mod faq').setDescription(` ${message.guild.name} does not offer mod or any staff roles for free.
     Avoid begging for it or you will be warned.
     Mod Application are there and you must apply.
     They are always open unless we have to many staff.
@@ -393,7 +393,7 @@ async function purge()
   if (purgeint > 800) return message.reply("I cannot purge more than 800 messages!");
   else { 
     try{
-      if (message.channel.type === ChannelType.GuildText) await message.channel.bulkDelete(purgeint).then(message.channel.send(`**${purgeint} messages deleted in this channel by ${message.member.user.tag}**`)).then(me =>{ setTimeout(() => me.delete(), 3000)}).catch(error => console.log(error))
+      if (message.channel.type === ChannelType.GuildText) await message.channel.bulkDelete(purgeint + 1).then(message.channel.send(`**${purgeint} messages deleted in this channel by ${message.member.user.tag}**`)).then(me =>{ setTimeout(() => me.delete(), 3000)}).catch(error => console.log(error))
    }
    catch (err) { message.channel.send("i could not purge the messages. " + err)}
   }
@@ -436,7 +436,7 @@ async function StartsApplicationInDm()
 Spinwheel();
 async function Spinwheel()
 {
- if (cmd.startsWith('testluck'))
+ if (cmd.startsWith('spinwheel'))
  {
   const args = message.content.trim().split(/ +/g);
   let fst = args[1];
