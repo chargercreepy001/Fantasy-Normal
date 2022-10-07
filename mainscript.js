@@ -18,6 +18,8 @@ client.on("error", error => {
 client.on('messageCreate', async message => 
 {
   
+  let cmd = message.content.toLowerCase();
+  
   const sleep = ms => new Promise(interval => setTimeout(interval, ms));
   if (cmd.startsWith('>ban')||cmd.startsWith('>kick')||cmd.startsWith('>mute')||cmd.startsWith('>stfu')||cmd.startsWith('>getfucked')||cmd.startsWith('>membercount'))
     {
