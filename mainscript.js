@@ -101,6 +101,10 @@ MemServers();
             }});
             if (!Reason) Reason = `${message.member.user.tag} ? No reason given.`;
             
+          if (message.type === MessageType.Reply){
+   return message.reply(":x:`Error: <Message.type: MessageType.Reply> [The moderation command message is a reply. please use the command without any reply! ]`")
+  
+  }
             const banembed = new EmbedBuilder().setDescription(`${Target.user.tag} was successfully banned by ${message.member.user.tag}`).setColor('#a70707')
     
                  try{
@@ -147,7 +151,9 @@ if (logschannel && logschannel.isTextBased()) {logschannel.send({embeds: [log_em
         let kickmember = message.mentions.members.first() || message.guild.members.cache.get(args[1]);
          let kickreason = message.content.split(" ").slice(2).join(' ') || 'No Reason mentioned';
     
-        
+        if (message.type === MessageType.Reply){
+   return message.reply(":x:`Error: <Message.type: MessageType.Reply> [The moderation command message is a reply. please use the command without any reply! ]`")
+  }
      if (!message.member.permissions.has(PermissionFlagsBits.KickMembers)) return false;
     
      const kickhelp = new EmbedBuilder().setTitle('**Command: .kick**').setDescription("**info:** kicks a member from the server.\n **other aliases:** \n .getlost, .getout \n **Format:** .kick <user> <reason> \n **Examples:**\n **(1)** .kick @chargy dating not allowed\n **(2)** .kick 9822389848884 stop spamming").setColor('#ad0505');
@@ -183,7 +189,8 @@ if (a)
 {
     if (a.permissions.has(PermissionFlagsBits.Administrator)) return message.reply(":x: `This user has {Administrator} permission. I cannot mute them.`");
 
-    
+    if (message.type === MessageType.Reply){
+   return message.reply(":x:`Error: <Message.type: MessageType.Reply> [The command message is a reply. please use the command without any reply! ]`"); }
     let reasonbody = message.content.split(" ").slice(3).join(' ');
     let timeoutreason = `(${message.member.user.tag})[${reasonbody}]`
     if (!timeoutreason === null) timeoutreason = `(${message.member.user.tag})[${reasonbody}]`
