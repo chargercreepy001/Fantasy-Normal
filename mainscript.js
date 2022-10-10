@@ -631,7 +631,7 @@ async function details()
  
   if (botchannelinfo && botchannelinfo.isTextBased())
   {
-    const mes =  botchannelinfo.messages.fetch('1028991297568133141').then(msg =>  msg.edit({embeds: [{
+    const mes =  botchannelinfo.messages.fetch('1028564046246596659').then(msg =>  msg.edit({embeds: [{
       title: 'Bot status [updated every 3 seconds]',
       description: `API Websocket Latency: **${ApiLatency}ms**\n Heath status: ${Heathstatus} \n My server count: **${client.guilds.cache.size}**`
     }]}))
