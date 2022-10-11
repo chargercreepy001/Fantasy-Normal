@@ -21,7 +21,7 @@ const commands = [
 
 const rest = new REST({ version: '10' }).setToken(token);
 
-rest.put(Routes.applicationGuildCommands('1028187111087673354', '1027159223328591932'), { body: commands })
+rest.put(Routes.applicationGuildCommands('1027159043455844452', '1027159223328591932'), { body: commands })
 	.then((data) => console.log(`Successfully registered ${data.length} application commands.`))
 	.catch(console.error);
 
