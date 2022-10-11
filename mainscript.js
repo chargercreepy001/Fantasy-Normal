@@ -1,8 +1,10 @@
 const Discord = require('discord.js');
-const { Client, GatewayIntentBits, AuditLogEvent, EmbedBuilder, PermissionFlagsBits, ActivityType, ChannelType, MessageFlags, DiscordAPIError, ApplicationCommandOptionWithChoicesAndAutocompleteMixin, OverwriteType, MembershipScreeningFieldType, UserFlags, codeBlock, MessageType } = require('discord.js')
-
+const { Client, GatewayIntentBits, AuditLogEvent, EmbedBuilder, PermissionFlagsBits,
+   ActivityType, ChannelType, MessageFlags, DiscordAPIError, 
+     UserFlags,  MessageType, MessageComponentInteraction, ActionRowBuilder,
+     ButtonBuilder, REST, SlashCommandBuilder, Routes, SelectMenuBuilder } = require('discord.js')
 //const AntiSpam = require("discord-anti-spam");
-const { REST, SlashCommandBuilder, Routes } = require('discord.js');
+
 const client = new Discord.Client({intents: 
   [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, 
     GatewayIntentBits.GuildMembers, GatewayIntentBits.MessageContent,
@@ -11,6 +13,92 @@ const client = new Discord.Client({intents:
  GatewayIntentBits.GuildBans, GatewayIntentBits.DirectMessageTyping] 
 });
 
+let token = process.env.mtoken;
+
+const commands = [
+	new SlashCommandBuilder().setName("help").setDescription('Helps with the commands and list.')
+].map(command => command.toJSON());
+
+const rest = new REST({ version: '10' }).setToken(token);
+
+rest.put(Routes.applicationGuildCommands('1028187111087673354', '1027159223328591932'), { body: commands })
+	.then((data) => console.log(`Successfully registered ${data.length} application commands.`))
+	.catch(console.error);
+
+client.on("error", error => {
+  console.log(error);
+})
+
+client.on("interactionCreate", async interaction => {
+ if (!interaction.isChatInputCommand()) return false;
+const {commandName } = interaction;
+ if (commandName === 'help')
+ {
+  const HelpEmbed = new EmbedBuilder().setTitle("**Help with commands**").setDescription(`Please select a command from the given menu. `).setColor("0x0099FF");
+
+  const row = new ActionRowBuilder()
+			.addComponents(
+          new SelectMenuBuilder()
+					.setCustomId('select')
+					.setPlaceholder('Select a command')
+					.addOptions([
+						{
+							label: 'Ban Moderation',
+							description: 'banning a member from a server.',
+							value: 'banopt',
+						},
+						{
+							label: 'Kick Moderation',
+							description: 'kicking a member from a server.',
+							value: 'kickopt',
+						},
+            {
+              label: 'Mute Moderation',
+              description: 'Mute a member so that they cannot send messages for a specific time.',
+              value: 'muteopt'
+            },
+            {
+            label: 'purge',
+            description: 'delete a large amount of messages in a channel.',
+            value: 'purgeopt'
+            }
+            
+					])
+			);
+      
+   
+  await interaction.reply({embeds: [HelpEmbed], components: [row]})
+ }
+})
+client.on("interactionCreate", async intaction => {
+  if (!intaction.isSelectMenu()) return false;
+
+ 
+  const banhelp = new EmbedBuilder().setTitle('**Ban Moderation**').setDescription("**info:** bans a member from the server. member cannot join until they are unbanned. this command only works with members who have `BAN_MEMBER`permission. \n in order to setup this command for server mods, please set the  `BAN_MEMBER` permission on to the role. **other aliases:** \n .getfucked, .fuckoff \n **Format:** .ban <user> <reason> \n **Examples:**\n **(1)** .ban @Mushy being mean to chargy\n **(2)** .ban 982238848884 harrasing/bullying\n **(3)** .getfucked @SussyBaka being too sus Uwu\n **(4)** .fuckoff @secretmoon troubling Snowy and Shivansi  ").setThumbnail('https://tenor.com/view/thor-banhammer-discord-ban-hammer-gif-26178131').setColor('#ad0505');
+  
+
+  if (intaction.customId === "select")
+  {
+    const values = intaction.values[0];
+    if (values === 'banopt')
+    {
+    intaction.message.edit({embeds: [banhelp]});
+   
+    }
+    else if (values === 'kickopt')
+    {
+      const kickhelp = new EmbedBuilder().setTitle('**Kick Moderation**').setDescription("**info:** kicks a member from the server. requires `KICK_MEMBERS` permissions to use the command.  a kicked member can join the server again through invite link. \n **other aliases:** \n .getlost, .getout \n **Format:** .kick <user> <reason> \n **Examples:**\n **(1)** .kick @chargy dating not allowed\n **(2)** .kick 9822389848884 stop spamming").setColor('#ad0505');
+    await intaction.message.edit({embeds: [kickhelp]})
+    }
+    else if (values === 'muteopt')
+    { 
+      const mutehelp = new EmbedBuilder().setTitle("Mute Moderation").setDescription('**info:** timeouts a member for a specific time so that they cannot send messages. requires `MANAGE_MESSAGES` permissions. \n **format:** .mute <member/memberid> <time> <reason> \n **Other Aliases:** \n .stfu, .pindropsilence \n EXAMPLES: \n (1) .mute @Snowy 2h being mean to HeadLance \n (2) .stfu @Mushy 69m stop argument \n (3) .pindropssilence 828388488483 5h no spamming').setColor('#ad0505');
+      await intaction.message.edit({embeds: [mutehelp]})
+    }
+  }
+  
+  
+})
 
 client.on("error", error => {
   console.log(error);
