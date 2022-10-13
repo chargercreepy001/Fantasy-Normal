@@ -35,9 +35,7 @@ const client = new Discord.Client({intents:
  GatewayIntentBits.GuildBans, GatewayIntentBits.DirectMessageTyping] 
 });
 
-
-
-let token = 'MTAyODE4NzExMTA4NzY3MzM1NA.GLF1GJ.uyRjN2qTVANnn3q5OiqM25C3lIrhN-YrFLz4F8'
+let token = process.env.mtoken;
 
 const commands = [
 	new SlashCommandBuilder().setName("help").setDescription('Helps with the commands and list.'),
