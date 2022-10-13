@@ -1,8 +1,30 @@
 const Discord = require('discord.js');
+
 const { Client, GatewayIntentBits, AuditLogEvent, EmbedBuilder, PermissionFlagsBits,
    ActivityType, ChannelType, MessageFlags, DiscordAPIError, 
      UserFlags,  MessageType, MessageComponentInteraction, ActionRowBuilder,
-     ButtonBuilder, REST, SlashCommandBuilder, Routes, SelectMenuBuilder } = require('discord.js')
+     ButtonBuilder, REST, SlashCommandBuilder, Routes, SelectMenuBuilder, GuildMember } = require('discord.js')
+
+     const wait = require('node:timers/promises').setTimeout;
+
+     function isHex()
+     {
+         var p = 0;
+         var re1 = /(\n|\r)+/g;
+         var re2 = /[\Wg-zG-Z]/;
+         var re3 = /v/i;
+         
+         var s = arguments[0];
+         if( typeof s != "string" ){ s = s.toString(); }
+  
+         var opt = arguments[1];
+         if( re3.test(opt) && (s.length % 2 > 0) ){ return false; }
+         s.replace( re1, "" );
+         if( s.substr(0,1) == "#" ){ p = 1; }
+             else if( s.substr(0,2).toLowerCase() == "0x" ){ p = 2; }
+        if( re2.test(s.substr(p,s.length)) ){ return false; }
+        return true;
+     }
 //const AntiSpam = require("discord-anti-spam");
 
 const client = new Discord.Client({intents: 
@@ -13,21 +35,23 @@ const client = new Discord.Client({intents:
  GatewayIntentBits.GuildBans, GatewayIntentBits.DirectMessageTyping] 
 });
 
-let token = process.env.mtoken;
+
+
+let token = 'MTAyODE4NzExMTA4NzY3MzM1NA.GLF1GJ.uyRjN2qTVANnn3q5OiqM25C3lIrhN-YrFLz4F8'
 
 const commands = [
-	new SlashCommandBuilder().setName("help").setDescription('Helps with the commands and list.')
-].map(command => command.toJSON());
+	new SlashCommandBuilder().setName("help").setDescription('Helps with the commands and list.'),
+   new SlashCommandBuilder().setName("embedbuilder").setDescription('create beautiful embed using this command').addStringOption(t => t.setName('title').setDescription('title of embed').setMaxLength(30)).addStringOption(d => d.setName('description').setDescription("desciption of the embed [max size: 500 letters]").setMaxLength(500)).addBooleanOption(b => b.setName("timestrap").setDescription("set the embed creation time")).addStringOption(co => co.setName('color').setDescription('sets the color of border of embed. only hex color codes can be used. example: #0000FF').setRequired(false)),
+  new SlashCommandBuilder().setName("ban").setDescription('ban a member from this guild.').addMentionableOption(i => i.setName('member').setDescription('select the member')).addStringOption(r => r.setName('reason').setDescription('reason for the ban, optional').setRequired(false))
+].map(command => command.toJSON())
 
 const rest = new REST({ version: '10' }).setToken(token);
 
-rest.put(Routes.applicationGuildCommands('1027159043455844452', '1027159223328591932'), { body: commands })
-	.then((data) => console.log(`Successfully registered ${data.length} application commands.`))
-	.catch(console.error);
 
 client.on("error", error => {
   console.log(error);
 })
+
 
 client.on("interactionCreate", async interaction => {
  if (!interaction.isChatInputCommand()) return false;
@@ -58,53 +82,101 @@ const {commandName } = interaction;
               value: 'muteopt'
             },
             {
-            label: 'purge',
-            description: 'delete a large amount of messages in a channel.',
-            value: 'purgeopt'
-            }
+            label: 'role management',
+            description: 'add/remove roles.',
+            value: 'roleopt'
+            },
+             {
+              label: 'purge',
+              description: 'bulk delete messages in channel.',
+              value: 'purgeopt'
+             }
             
 					])
 			);
       
-   
   await interaction.reply({embeds: [HelpEmbed], components: [row]})
  }
 })
+client.on("interactionCreate", async interaction => {
+  if (!interaction.isChatInputCommand()) return false;
+  const { commandName } = interaction;
+  if (commandName === "ban") 
+  {
+    const reason = interaction.options.getString('reason');
+const boolean = interaction.options.getBoolean('timestrap');
+const target = interaction.options.getMember('member');
+
+
+if (!interaction.memberPermissions.has(PermissionFlagsBits.BanMembers))
+{}
+else {}
+  }
+else if (commandName === 'embedbuilder')
+{
+  const description = interaction.options.getString('description');
+  const titl = interaction.options.getString('title');
+  const timestrap = interaction.options.getBoolean('timestrap');
+const colortag = interaction.options.getString('color');
+
+
+  if (description.length === null) return interaction.reply({embeds: [{ description: "description cannot be empty!" }]})
+  if (timestrap === true)
+  {
+ const embedbuilder = new EmbedBuilder().setTitle(`${titl}`).setDescription(`${description}`).setTimestamp();
+ if (colortag.length !== null && isHex(colortag)){
+  embedbuilder.setColor(colortag);
+ }
+ else { embedbuilder.setColor('NotQuiteBlack'); await interaction.reply({ embeds: [{description: 'the color hex code provided is not valid. using default embed color for the embed.'}], ephemeral: true}) }
+ await interaction.channel.send({ embeds: [embedbuilder]});
+
+  }
+  else {
+    const embedbuilder2 = new EmbedBuilder().setTitle(`${titl}`).setDescription(`${description}`);
+    await interaction.channel.send({embeds: [embedbuilder2]});
+  }
+}
+
+})
+
 client.on("interactionCreate", async intaction => {
   if (!intaction.isSelectMenu()) return false;
+  if (intaction.member.user.id!== intaction.user.id) return intaction.reply({embeds: [{ description: 'This interaction is not your interaction. use /help slash command to create a new interaction for you.'}], ephemeral: true})
 
- 
-  const banhelp = new EmbedBuilder().setTitle('**Ban Moderation**').setDescription("**info:** bans a member from the server. member cannot join until they are unbanned. this command only works with members who have `BAN_MEMBER`permission. \n in order to setup this command for server mods, please set the  `BAN_MEMBER` permission on to the role. **other aliases:** \n .getfucked, .fuckoff \n **Format:** .ban <user> <reason> \n **Examples:**\n **(1)** .ban @Mushy being mean to chargy\n **(2)** .ban 982238848884 harrasing/bullying\n **(3)** .getfucked @SussyBaka being too sus Uwu\n **(4)** .fuckoff @secretmoon troubling Snowy and Shivansi  ").setThumbnail('https://tenor.com/view/thor-banhammer-discord-ban-hammer-gif-26178131').setColor('#ad0505');
-  
-
+  const banhelp = new EmbedBuilder().setTitle('**Ban Moderation**').setDescription("**info:** bans a member from the server. member cannot join until they are unbanned. this command only works with members who have `BAN_MEMBER`permission. \n in order to setup this command for server mods, please set the  `BAN_MEMBER` permission on to the role.\n **other aliases:** \n .getfucked, .fuckoff \n **Format:** .ban <user> <reason> \n **Examples:**\n **(1)** .ban @Mushy being mean to chargy\n **(2)** .ban 982238848884 harrasing/bullying\n **(3)** .getfucked @SussyBaka being too sus Uwu\n **(4)** .fuckoff @secretmoon troubling Snowy and Shivansi  ").setThumbnail('https://tenor.com/view/thor-banhammer-discord-ban-hammer-gif-26178131').setColor('#ad0505');
   if (intaction.customId === "select")
   {
     const values = intaction.values[0];
     if (values === 'banopt')
     {
+      await wait(1000);
     intaction.message.edit({embeds: [banhelp]});
+    await intaction.deferUpdate();
    
     }
     else if (values === 'kickopt')
     {
+      await wait(1000);
       const kickhelp = new EmbedBuilder().setTitle('**Kick Moderation**').setDescription("**info:** kicks a member from the server. requires `KICK_MEMBERS` permissions to use the command.  a kicked member can join the server again through invite link. \n **other aliases:** \n .getlost, .getout \n **Format:** .kick <user> <reason> \n **Examples:**\n **(1)** .kick @chargy dating not allowed\n **(2)** .kick 9822389848884 stop spamming").setColor('#ad0505');
     await intaction.message.edit({embeds: [kickhelp]})
+    await intaction.deferUpdate();
     }
     else if (values === 'muteopt')
     { 
+    await wait(1000);
       const mutehelp = new EmbedBuilder().setTitle("Mute Moderation").setDescription('**info:** timeouts a member for a specific time so that they cannot send messages. requires `MANAGE_MESSAGES` permissions. \n **format:** .mute <member/memberid> <time> <reason> \n **Other Aliases:** \n .stfu, .pindropsilence \n EXAMPLES: \n (1) .mute @Snowy 2h being mean to HeadLance \n (2) .stfu @Mushy 69m stop argument \n (3) .pindropssilence 828388488483 5h no spamming').setColor('#ad0505');
       await intaction.message.edit({embeds: [mutehelp]})
+      await intaction.deferUpdate();
+    }
+    else if (values === 'purgeopt')
+    {
+      await wait(1000);
+      const purgehelp = new EmbedBuilder().setTitle("Purge").setDescription('**info:** deletes a specified number of messages in the channel. `message limit: 800` \n **format:** .purge <number>  \n **Examples:**\n (1) .purge 69').setColor('#ad0505');
+    await intaction.message.edit({embeds: [purgehelp]})
+    await intaction.deferUpdate();
     }
   }
-  
-  
 })
-
-client.on("error", error => {
-  console.log(error);
-})
-
-
 client.on('messageCreate', async msg => 
 {
   if (msg.content.startsWith(`.setup`))
@@ -132,8 +204,15 @@ let don = 0;
     msg.guild.channels.cache.forEach(e => {if(e.type === ChannelType.GuildText) { e.permissionOverwrites.edit(qurrole, {
       SendMessages: false, ViewChannel: true }).catch(e => console.log(e)) }});
     }
-    const logsem = new EmbedBuilder().setDescription(`> I have Administrator privileges: ${perms}\n > Channel log setup: Success \n > Suspicius Trap role setup: in progress`);
-    const logsedit = new EmbedBuilder().setDescription(`> I have Administrator privileges: ${perms}\n > Channel log setup: Success \n > Suspicious Trap role setup: done! \n > Finishing up...`);
+  Routes.guildAuditLog()
+let testtry = "Commands Posted: :white_check_mark:";
+    rest.put(Routes.applicationGuildCommands('1028187111087673354', msg.guildId), { body: commands })
+  
+	.then((data) => msg.channel.send({embeds: [{description: `**Registering ${data.length} commands at /applications/${client.user.id}/guilds/${msg.guildId}/commands**`}]}))
+	.catch(console.error);
+
+  //  const logsem = new EmbedBuilder().setDescription(`> I have Administrator privileges: ${perms}\n > Channel log setup: Success \n > Suspicius Trap role setup: in progress`);
+    const logsedit = new EmbedBuilder().setDescription(`> I have Administrator privileges: ${perms}\n > Channel log setup: Success \n > Suspicious Trap role setup: done! \n > ${testtry}\n finishing up....`);
     msg.channel.send({embeds: [logsedit]});
   }
 })
