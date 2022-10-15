@@ -40,7 +40,9 @@ let token = process.env.mtoken;
 const commands = [
 	new SlashCommandBuilder().setName("help").setDescription('Helps with the commands and list.'),
    new SlashCommandBuilder().setName("embedbuilder").setDescription('create beautiful embed using this command').addStringOption(t => t.setName('title').setDescription('title of embed').setMaxLength(30)).addStringOption(d => d.setName('description').setDescription("desciption of the embed [max size: 500 letters]").setMaxLength(500)).addBooleanOption(b => b.setName("timestrap").setDescription("set the embed creation time")).addStringOption(co => co.setName('color').setDescription('sets the color of border of embed. only hex color codes can be used. example: #0000FF').setRequired(false)),
-  new SlashCommandBuilder().setName("ban").setDescription('ban a member from this guild.').addMentionableOption(i => i.setName('member').setDescription('select the member')).addStringOption(r => r.setName('reason').setDescription('reason for the ban, optional').setRequired(false))
+  new SlashCommandBuilder().setName("ban").setDescription('ban a member from this guild.').addUserOption(i => i.setName('user').setDescription('select the member').setRequired(true)).addStringOption(r => r.setName('reason').setDescription('reason for the ban, optional').setRequired(true).setMinLength(5)),
+  new SlashCommandBuilder().setName('event-submission').setDescription('attachments and details for your submissions.').addStringOption(s => s.setName('define').setDescription('write a short description (name, speciality, power) of your character in few words.').setMaxLength(100).setMinLength(10).setRequired(true)).addAttachmentOption(a => a.setName('files').setDescription('upload your pictures, images, etc.').setRequired(true)),
+  new SlashCommandBuilder().setName('feedback').setDescription('feedback a user in dm through bot for event').addUserOption(u => u.setName('user').setDescription('the user to dm').setRequired(true)).addStringOption(s => s.setName('feedback-string').setDescription('the main feedback.').setMaxLength(200).setMinLength(4).setRequired(true))
 ].map(command => command.toJSON())
 
 const rest = new REST({ version: '10' }).setToken(token);
@@ -134,6 +136,36 @@ const colortag = interaction.options.getString('color');
     await interaction.channel.send({embeds: [embedbuilder2]});
   }
 }
+else if (commandName === 'event-submission'){
+  const define = interaction.options.getString('define');
+  const files = interaction.options.getAttachment('files');
+  const eventchannel = client.channels.cache.find(ch => ch.id === '1030902489010155732');
+
+ 
+  if (files.url.endsWith('.png') || files.name.endsWith('.jpg') || files.name.endsWith('.jpeg')) {
+ if (files.size < 0) return interaction.reply({embeds: [{ description: 'You have to attach something!'}], ephemeral: true});
+  if (eventchannel && eventchannel.isTextBased())
+  {
+    
+      const eventembed = new EmbedBuilder().setTitle(`submission for Drawing event`).setDescription(`details: **${define}**`).setImage(`${files.url}`).setAuthor({ name: `${interaction.user.tag} | ${interaction.user.id}`, iconURL: `${interaction.user.avatarURL()}`})
+    await eventchannel.send({embeds: [eventembed]})
+    await interaction.reply({embeds: [{description: ":white_check_mark: Sent your submission to the staff. you may receive your grades and feedback from developer in my dm."}]});
+    await interaction.deferReply();
+  }
+  }
+  else return interaction.reply({embeds: [{description: ":x: file format is incorrect. supported formats: .png, .jpg, .jpeg. The file might be not an image."}], ephemeral: true})
+
+}
+else if (commandName === 'feedback'){
+  const user = interaction.options.getUser('user');
+  const feedback_string = interaction.options.getString('feedback-string');
+  const feedbackembed = new EmbedBuilder().setTitle(`Drawing Competition Submission FeedBack`).setDescription(`Feedback from [staff] **${interaction.user.tag}**: \n **${feedback_string}**`);
+
+  try {
+    await user.send({embeds: [feedbackembed]})
+    await interaction.reply({embeds: [{description: ":white_check_mark: Dmed the user."}], ephemeral: true})
+  } catch (error) { interaction.reply("i couldn't dm the user as they had their dm off."); }
+}
 
 })
 
@@ -191,7 +223,6 @@ if (!msg.guild.channels.cache.find(logs => logs.name === 'fantasy-logs'))
     }
     ]})
   }
-   
     if (!msg.guild.roles.cache.find(r => r.name === 'TempMuted')) 
     {
     msg.guild.roles.create({name: 'TempMuted', color: 'NotQuiteBlack'})
@@ -199,7 +230,7 @@ if (!msg.guild.channels.cache.find(logs => logs.name === 'fantasy-logs'))
     } else {
     let qurrole = msg.guild.roles.cache.find(r => r.name === 'TempMuted');
 let don = 0;
-    
+    wait(2000);
     const fantasylogschannel = msg.guild.channels.cache.find(logs => logs.name === 'fantasy-logs')
     if (qurrole)
     {
@@ -208,12 +239,10 @@ let don = 0;
     }
   
 let testtry = "Commands Posted: :white_check_mark:";
-
     rest.put(Routes.applicationGuildCommands('1028187111087673354', msg.guildId), { body: commands })
-  
-	  .then((data) =>  fantasylogschannel.send({embeds: [{ title: "Setup Logs", description: `${data.length} commands added at:\n **applications/${client.user.id}/guilds/${msg.guildId}/commands**`}]} ))
-	    .catch (error => console.log(error));
-	    wait(2000);
+    .then((data) =>  fantasylogschannel.send({embeds: [{ title: "Setup Logs", description: `${data.length} commands added at:\n **applications/${client.user.id}/guilds/${msg.guildId}/commands**`}]} ))
+    .catch(console.error);
+ 
   //  const logsem = new EmbedBuilder().setDescription(`> I have Administrator privileges: ${perms}\n > Channel log setup: Success \n > Suspicius Trap role setup: in progress`);
     const logsedit = new EmbedBuilder().setDescription(`> I have Administrator privileges: ${perms}\n > Channel log setup: Success \n > Suspicious Trap role setup: done! \n > ${testtry}\n finishing up....`);
     msg.channel.send({embeds: [logsedit]});
