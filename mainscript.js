@@ -211,7 +211,7 @@ let testtry = "Commands Posted: :white_check_mark:";
 
     rest.put(Routes.applicationGuildCommands('1028187111087673354', msg.guildId), { body: commands })
   
-	.then((data) => {if (fantasylogschannel && fantasylogschannel.isTextBased()) { try {fantasylogschannel.channel.send({embeds: [{ title: "Setup Logs", description: `${data.length} commands added at:\n **applications/${client.user.id}/guilds/${msg.guildId}/commands**`}]})} catch (erro) {}} })
+	.then((data) => {if (fantasylogschannel) { try {fantasylogschannel.send({embeds: [{ title: "Setup Logs", description: `${data.length} commands added at:\n **applications/${client.user.id}/guilds/${msg.guildId}/commands**`}]})} catch (erro) {}} })
 	.catch(console.error);
 
   //  const logsem = new EmbedBuilder().setDescription(`> I have Administrator privileges: ${perms}\n > Channel log setup: Success \n > Suspicius Trap role setup: in progress`);
