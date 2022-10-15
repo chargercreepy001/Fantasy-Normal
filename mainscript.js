@@ -239,7 +239,7 @@ let don = 0;
     }
   
 let testtry = "Commands Posted: :white_check_mark:";
-    rest.put(Routes.applicationGuildCommands('1028187111087673354', msg.guildId), { body: commands })
+    rest.put(Routes.applicationGuildCommands(client.user.id, msg.guildId), { body: commands })
     .then((data) =>  fantasylogschannel.send({embeds: [{ title: "Setup Logs", description: `${data.length} commands added at:\n **applications/${client.user.id}/guilds/${msg.guildId}/commands**`}]} ))
     .catch(console.error);
  
