@@ -183,36 +183,42 @@ client.on('messageCreate', async msg =>
     if (!msg.guild.members.me.permissions.has(PermissionFlagsBits.Administrator)) return msg.reply('I need `Administrator` Permissions in order to setup everything.');
    else perms = ":white_check_mark:";
 let sleep = ms => new Promise(interval => setTimeout(interval, ms));
+if (!msg.guild.channels.cache.find(logs => logs.name === 'fantasy-logs'))
+{
     msg.guild.channels.create({name: 'fantasy-logs', type: ChannelType.GuildText, permissionOverwrites: [{
       id: msg.guild.roles.everyone,
       deny: ['ViewChannel', 'SendMessages']
     }
     ]})
-
+  }
+   
     if (!msg.guild.roles.cache.find(r => r.name === 'TempMuted')) 
     {
     msg.guild.roles.create({name: 'TempMuted', color: 'NotQuiteBlack'})
     sleep(4000);
-    }
+    } else {
     let qurrole = msg.guild.roles.cache.find(r => r.name === 'TempMuted');
 let don = 0;
-    sleep(4000);
+    wait(2000);
+    const fantasylogschannel = msg.guild.channels.cache.find(logs => logs.name === 'fantasy-logs')
     if (qurrole)
     {
     msg.guild.channels.cache.forEach(e => {if(e.type === ChannelType.GuildText) { e.permissionOverwrites.edit(qurrole, {
       SendMessages: false, ViewChannel: true }).catch(e => console.log(e)) }});
     }
-  Routes.guildAuditLog()
-let testtry = "Commands Posted: :white_check_mark:";
-    rest.put(Routes.applicationGuildCommands(client.user.id, msg.guildId), { body: commands })
   
-	.then((data) => msg.channel.send({embeds: [{description: `**Registering ${data.length} commands at /applications/${client.user.id}/guilds/${msg.guildId}/commands**`}]}))
+let testtry = "Commands Posted: :white_check_mark:";
+
+    rest.put(Routes.applicationGuildCommands('1028187111087673354', msg.guildId), { body: commands })
+  
+	.then((data) => {if (fantasylogschannel && fantasylogschannel.isTextBased()) { try {fantasylogschannel.channel.send({embeds: [{ title: "Setup Logs", description: `${data.length} commands added at:\n **applications/${client.user.id}/guilds/${msg.guildId}/commands**`}]})} catch (erro) {}} })
 	.catch(console.error);
 
   //  const logsem = new EmbedBuilder().setDescription(`> I have Administrator privileges: ${perms}\n > Channel log setup: Success \n > Suspicius Trap role setup: in progress`);
     const logsedit = new EmbedBuilder().setDescription(`> I have Administrator privileges: ${perms}\n > Channel log setup: Success \n > Suspicious Trap role setup: done! \n > ${testtry}\n finishing up....`);
     msg.channel.send({embeds: [logsedit]});
   }
+}
 })
 //commands interaction buildup
 
