@@ -199,7 +199,7 @@ if (!msg.guild.channels.cache.find(logs => logs.name === 'fantasy-logs'))
     } else {
     let qurrole = msg.guild.roles.cache.find(r => r.name === 'TempMuted');
 let don = 0;
-    wait(2000);
+    
     const fantasylogschannel = msg.guild.channels.cache.find(logs => logs.name === 'fantasy-logs')
     if (qurrole)
     {
@@ -211,9 +211,9 @@ let testtry = "Commands Posted: :white_check_mark:";
 
     rest.put(Routes.applicationGuildCommands('1028187111087673354', msg.guildId), { body: commands })
   
-	 .then((data) =>  {fantasylogschannel.send({embeds: [{ title: "Setup Logs", description: `${data.length} commands added at:\n **applications/${client.user.id}/guilds/${msg.guildId}/commands**`}]})})
-	.catch(console.error);
-
+	  .then((data) =>  fantasylogschannel.send({embeds: [{ title: "Setup Logs", description: `${data.length} commands added at:\n **applications/${client.user.id}/guilds/${msg.guildId}/commands**`}]} ))
+	    .catch (error => console.log(error));
+	    wait(2000);
   //  const logsem = new EmbedBuilder().setDescription(`> I have Administrator privileges: ${perms}\n > Channel log setup: Success \n > Suspicius Trap role setup: in progress`);
     const logsedit = new EmbedBuilder().setDescription(`> I have Administrator privileges: ${perms}\n > Channel log setup: Success \n > Suspicious Trap role setup: done! \n > ${testtry}\n finishing up....`);
     msg.channel.send({embeds: [logsedit]});
