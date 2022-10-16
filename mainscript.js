@@ -157,6 +157,7 @@ else if (commandName === 'event-submission'){
 
 }
 else if (commandName === 'feedback'){
+	 if (!interaction.memberPermissions.has(PermissionFlagsBits.ManageEvents)) return interaction.reply({ content: 'you dont have required permissions to use this command!', ephemeral: true})
   const user = interaction.options.getUser('user');
   const feedback_string = interaction.options.getString('feedback-string');
   const feedbackembed = new EmbedBuilder().setTitle(`Drawing Competition Submission FeedBack`).setDescription(`Feedback from [staff] **${interaction.user.tag}**: \n **${feedback_string}**`);
