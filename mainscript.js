@@ -287,60 +287,76 @@ MemServers();
 
    }
   
-    Ban();
+       Ban();
     async function Ban()
     {
          if (message.content.toLowerCase().startsWith(`${prefix}ban`) || cmd.startsWith(`${prefix}fuckoff`)|| cmd.startsWith(`${prefix}getfucked`))
         {
           if (!message.member.permissions.has(PermissionFlagsBits.BanMembers)) return;
+          //let targetuser = message.mentions.members.first() || message.guild.members.cache.get(args[1])
             let Target = message.mentions.members.first() || message.guild.members.cache.get(args[1]);
+            
             let Reason = `${message.member.user.tag}: ${message.content.split(' ').slice(2).join(' ')}`;
-            const banhelp = new EmbedBuilder().setTitle('**Command: .ban**').setDescription("**info:** bans a member from the server. member cannot join until they are unbanned.\n**other aliases:** \n .getfucked, .fuckoff \n **Format:** .ban <user> <reason> \n **Examples:**\n **(1)** .ban @Mushy being mean to chargy\n **(2)** .ban 982238848884 harrasing/bullying").setThumbnail('https://tenor.com/view/thor-banhammer-discord-ban-hammer-gif-26178131').setColor('#ad0505');
+            const banhelp = new EmbedBuilder().setTitle('**Command: .ban**').setDescription("**info:** bans a member from the server. member cannot join until they are unbanned.**other aliases:** \n .getfucked, .fuckoff \n **Format:** .ban <user> <reason> \n **Examples:**\n **(1)** .ban @Mushy being mean to chargy\n **(2)** .ban 982238848884 harrasing/bullying").setThumbnail('https://tenor.com/view/thor-banhammer-discord-ban-hammer-gif-26178131').setColor('#ad0505');
        //   if (Target.id === message.member.id) return message.reply("` Uff, Tryna Ban your self? bruh...`");
             if (!Target) return message.reply({embeds: [banhelp], allowedMentions: {
               repliedUser: false
             }});
+            if (Target.id === message.member.id) return message.reply("`Heyo, Chill bro! why are you planning to ban yourself with your command? oh if it was a mistake then nvm...`")
             if (!Reason) Reason = `${message.member.user.tag} ? No reason given.`;
             
-          if (message.type === MessageType.Reply){
-   return message.reply(":x:`Error: <Message.type: MessageType.Reply> [The moderation command message is a reply. please use the command without any reply! ]`")
-  
-  }
-            const banembed = new EmbedBuilder().setDescription(`${Target.user.tag} was successfully banned by ${message.member.user.tag}`).setColor('#a70707')
+            const banembed = new EmbedBuilder().setDescription(`**${Target.user.tag}** was successfully banned by **${message.member.user.tag}**`).setColor('#4de482')
     
                  try{
+                
                     if (Target.bannable && !Target.permissions.has(PermissionFlagsBits.BanMembers))
                     {
-                      Target.send(`**You were banned from ${message.guild.name} | ${Reason}**`).then(Target.ban({ reason: Reason}));
+                      Target.send(`**You were banned from ${message.guild.name} | ${Reason}**`).then(message.guild.bans.create(targetuser, {reason: Reason}));
                       await message.channel.send({embeds: [banembed]});
                     }
-
                     else { 
                       if (Target.id !== message.guild.ownerId) return message.reply(":x: `i cant ban this user. User might be Either Mod/Admin or i don't have permission to ban the User. `")
-                    else return message.channel.send("`Uff, i hate silly mistakes... how the heck could i ban server owner!?!`")}
-                   
-                 }
-                 catch (error) {
-               message.channel.send(error);
+                    else return message.channel.send("`Uff, i hate silly mistakes... how the heck could i ban server owner!?!`")
+                    
+                  }
              }
+             catch (err) { message.channel.send({embeds: [{description: `I could not ban that user |  Error => ${err}`}]}) }
             
         }
     }
-    const bword = /\b(?:bitch|fuck|shit|mother fucker|cunt|shitty|dumbass|ass|shithead|\shitting|holyshit|sh!t|fuckoff|fuk|fukoff|daaaamn|goddamn|fucking|pussy|retard|dick|dickhead|damnit|nigga|nig| f*uck|f!ck|f u c k|fk)\b/gi 
-    if (bword.test(message.content.toLowerCase())) {
-  if (message.member.permissions.has(PermissionFlagsBits.Administrator)||message.member.permissions.has(PermissionFlagsBits.BanMembers)) return;
-  const log_em = new EmbedBuilder()
-  .setTitle(`User: **${message.author.tag}**`)
-.setDescription(` Auto Message delete, **Reason:** Containing a bad word`)
-.setColor('#7D0608');
 
+    Fuckban();
+    async function Fuckban()
+    {
+      if (message.content.toLowerCase().startsWith(`${prefix}fuckban`) || cmd.startsWith(`${prefix}hackban`)|| cmd.startsWith(`${prefix}userban`))
+        {
+          let Reason = `${message.member.user.tag}: ${message.content.split(' ').slice(2).join(' ')}`;
+          const banhelp = new EmbedBuilder().setTitle('**Command: user ban**').setDescription("**info:** bans a `User` in the server that doesn't exist on the guild or is not a guild member. cannot join the guild until they are unbanned. **other aliases:** \n .hackban, .fuckban, .userban \n **Format:** .hackban <id> <reason> \n **Examples:**\n **(1)** .hackban 2929394949494 being mean to chargy\n **(2)** .fuckban 9822388488894 hacker ").setThumbnail('https://tenor.com/view/thor-banhammer-discord-ban-hammer-gif-26178131').setColor('#ad0505');
+          if (!message.member.permissions.has(PermissionFlagsBits.BanMembers)) return;
+          if (isNaN(args[1])) return message.reply("not a valid id.");
+
+          if (args[1].length === null) return message.reply({embeds: [banhelp], allowedMentions: { repliedUser: false}})
+           client.users.fetch(args[1]).then(t => {
+          
+
+            if (t.id === message.member.id) return message.reply("`Heyo, Chill bro! why are you planning to ban yourself with your command? oh if it was a mistake then nvm...`")
+            if (!Reason) Reason = `${message.member.user.tag} ? No reason given.`;
+            if (message.guild.members.cache.get(t.id)) {  return message.reply({embeds: [{description: "The account is a `GuildMember`. use .ban to ban them!"}]})}
+            const banembed = new EmbedBuilder().setDescription(`${t.tag} was successfully banned by ${message.member.user.tag}`).setColor('#4de482')
     
-const logschannel = message.guild.channels.cache.find(c => c.name.includes('fantasy-logs'))
+                 try{
 
-try{ message.delete({timeout: 2000}).then(message.channel.send(`**${message.member.user.tag}** Watch your language.`))
-if (logschannel && logschannel.isTextBased()) {logschannel.send({embeds: [log_em]})
-}}
-    catch (err) {return; }
+                      message.guild.bans.create(t, {reason: Reason});
+                      message.channel.send({embeds: [banembed]});
+                    
+                    //  if (t.id === message.guild.ownerId) return message.reply(":x: `i cant ban this user. User might be Either Mod/Admin or i don't have permission to ban the User. `")
+                  //  else return message.channel.send("`Uff, i hate silly mistakes... how the heck could i ban server owner!?!`"
+			 
+             }
+             catch (err) { message.channel.send({embeds: [{description: `I could not ban that user |  Error => ${err}`}]}) }
+          
+          }).catch(error =>  message.channel.send({ embeds: [{ description: `I could not find that user.`, color: '#4de482' }]}));
+        }
     }
   
     kickmem();
