@@ -38,11 +38,13 @@ const client = new Discord.Client({intents:
 let token = process.env.mtoken;
 
 const commands = [
-	new SlashCommandBuilder().setName("help").setDescription('Helps with the commands and list.'),
-   new SlashCommandBuilder().setName("embedbuilder").setDescription('create beautiful embed using this command').addStringOption(t => t.setName('title').setDescription('title of embed').setMaxLength(30)).addStringOption(d => d.setName('description').setDescription("desciption of the embed [max size: 500 letters]").setMaxLength(500)).addBooleanOption(b => b.setName("timestrap").setDescription("set the embed creation time")).addStringOption(co => co.setName('color').setDescription('sets the color of border of embed. only hex color codes can be used. example: #0000FF').setRequired(false)),
+  new SlashCommandBuilder().setName("help").setDescription('Helps with the commands and list.'),
+  new SlashCommandBuilder().setName("embedbuilder").setDescription('create beautiful embed using this command').addStringOption(t => t.setName('title').setDescription('title of embed').setMaxLength(30)).addStringOption(d => d.setName('description').setDescription("desciption of the embed [max size: 500 letters]").setMaxLength(500)).addBooleanOption(b => b.setName("timestrap").setDescription("set the embed creation time")).addStringOption(co => co.setName('color').setDescription('sets the color of border of embed. only hex color codes can be used. example: #0000FF').setRequired(false)),
   new SlashCommandBuilder().setName("ban").setDescription('ban a member from this guild.').addUserOption(i => i.setName('user').setDescription('select the member').setRequired(true)).addStringOption(r => r.setName('reason').setDescription('reason for the ban, optional').setRequired(true).setMinLength(5)),
   new SlashCommandBuilder().setName('event-submission').setDescription('attachments and details for your submissions.').addStringOption(s => s.setName('define').setDescription('write a short description (name, speciality, power) of your character in few words.').setMaxLength(100).setMinLength(10).setRequired(true)).addAttachmentOption(a => a.setName('files').setDescription('upload your pictures, images, etc.').setRequired(true)),
-  new SlashCommandBuilder().setName('feedback').setDescription('feedback a user in dm through bot for event').addUserOption(u => u.setName('user').setDescription('the user to dm').setRequired(true)).addStringOption(s => s.setName('feedback-string').setDescription('the main feedback.').setMaxLength(200).setMinLength(4).setRequired(true))
+  new SlashCommandBuilder().setName('feedback').setDescription('feedback a user in dm through bot for event').addUserOption(u => u.setName('user').setDescription('the user to dm').setRequired(true)).addStringOption(s => s.setName('feedback-string').setDescription('the main feedback.').setMaxLength(200).setMinLength(4).setRequired(true)),
+  new SlashCommandBuilder().setName('avatar-view').setDescription("gets the avatar of a user. ").addUserOption(o => o.setName('auser').setDescription('select the user.').setRequired(true))
+
 ].map(command => command.toJSON())
 
 const rest = new REST({ version: '10' }).setToken(token);
