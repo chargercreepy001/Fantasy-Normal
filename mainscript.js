@@ -173,12 +173,11 @@ else if (commandName === 'feedback'){
 {
   const auser = interaction.options.getUser('auser');
   const auserasmember = interaction.guild.members.cache.get(auser.id);
-  const a = auserasmember.displayAvatarURL({ size: 2048})
+ 
   try {
   if (auserasmember) { 
-  const avatarembed = new EmbedBuilder().setTitle(`Avatar View`).setDescription(`**${auserasmember.user.tag}**`).setImage(auserasmember.displayAvatarURL()).setURL(auserasmember.displayAvatarURL({ size: 4096, d}));
-  interaction.reply({ embeds: [avatarembed] })
-	  await interaction.deferReply();
+ const avatarembed = new EmbedBuilder().setTitle(`Avatar View`).setDescription(`**${auserasmember.user.tag}**`).setImage(auserasmember.displayAvatarURL({ size: 1024})).setURL(auserasmember.displayAvatarURL());
+  interaction.reply({ embeds: [avatarembed] });
   } 
   else return interaction.reply({ content: 'I could not find that user. They are not in this guild.', ephemeral: true})
 } catch (error) { console.log(error) }
