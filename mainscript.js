@@ -167,6 +167,20 @@ else if (commandName === 'feedback'){
     await interaction.reply({embeds: [{description: ":white_check_mark: Dmed the user."}], ephemeral: true})
   } catch (error) { interaction.reply("i couldn't dm the user as they had their dm off."); }
 }
+	else if (commandName === 'avatar-view')
+{
+  const auser = interaction.options.getUser('auser');
+  const auserasmember = interaction.guild.members.cache.get(auser.id);
+  const a = auserasmember.displayAvatarURL({ size: 2048})
+  try {
+  if (auserasmember) { 
+  const avatarembed = new EmbedBuilder().setTitle(`Avatar View`).setDescription(`**${auserasmember.user.tag}**`).setImage(auserasmember.displayAvatarURL()).setURL(auserasmember.displayAvatarURL({ size: 4096, d}));
+  interaction.reply({ embeds: [avatarembed] })
+	  await interaction.deferReply();
+  } 
+  else return interaction.reply({ content: 'I could not find that user. They are not in this guild.', ephemeral: true})
+} catch (error) { console.log(error) }
+}
 
 })
 
