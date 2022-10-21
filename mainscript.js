@@ -326,7 +326,7 @@ MemServers();
                 
                     if (Target.bannable && !Target.permissions.has(PermissionFlagsBits.BanMembers))
                     {
-                      Target.send(`**You were banned from ${message.guild.name} | ${Reason}**`).then(message.guild.bans.create(targetuser, {reason: Reason}));
+                      Target.send(`**You were banned from ${message.guild.name} | ${Reason}**`).then(Target.ban({ reason: Reason});
                       await message.channel.send({embeds: [banembed]});
                     }
                     else { 
