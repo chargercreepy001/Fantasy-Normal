@@ -9,6 +9,7 @@ GatewayIntentBits.GuildBans, GatewayIntentBits.DirectMessageTyping]
 })
 
 client.on(Events.MessageCreate, async message => {
+  if (message.author.bot) return false;
   let cmd = message.content.toLowerCase();
   Nuke_Warning();
   const prefix = '!';
