@@ -1,1 +1,1 @@
-Worker: node mainscript.js
+Worker: node headlance.js
