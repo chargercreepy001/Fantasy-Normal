@@ -130,4 +130,4 @@ client.on('messageDelete', async message => {
   }
 })
 // rfs talking bot (reder)
-client.login('OTkwNDc4ODMzNzcxNzQ5NDA3.GsQUSV.QmWpFKKN1izsHXTRbq6j0rkow7ZQ7ofkPTs2qg');
+client.login(process.env.htoken);
