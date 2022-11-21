@@ -9,65 +9,69 @@ GatewayIntentBits.GuildBans, GatewayIntentBits.DirectMessageTyping]
 })
 
 client.on(Events.MessageCreate, async message => {
-  if (message.author.bot) return false;
+
   let cmd = message.content.toLowerCase();
-  Nuke_Warning();
-  const prefix = '!';
-  async function Nuke_Warning()
+  def();
+  async function def()
   {
-    if (cmd.startsWith('.nukepanel_create'))
+  if (cmd.startsWith(`.leveling on`))
+  {
+    const leveling = new EmbedBuilder().setTitle("Leveling System").setDescription(`Leveling system records every message of a user, it adds a specific amount of points for message interval, sent in it's fixed time. Leveling system is on now! `).setColor('Aqua');
+    const rawdata = client.channels.cache.get('1044193845887369246');
+
+    if (rawdata.type === ChannelType.GuildText)
     {
-      if (message.member.user.tag !== 'HeadLance#1415') return false;
-const nuke_warning = new EmbedBuilder().setTitle('NUKE').setDescription(':radioactive: This is A nuke command made by HeadLance#1045. this command will nuke the entire server, damage the channels, roles and ban all members. The embed you are reading now is the first and the last warning triggered by the command executed. If you are aware of what you are doing, then press the button.').setColor('DarkRed')
-const button_nuke = new ButtonBuilder().setCustomId('nuke').setLabel('Execute').setStyle(ButtonStyle.Primary);
-const row = new ActionRowBuilder().addComponents(button_nuke);
-       message.channel.send({ embeds: [nuke_warning], components: [row]});
+      const existsparams = rawdata.messages.cache.find(m => m.content.startsWith(`${message.guildId} on`));
+      if (existsparams) return message.reply({ embeds: [{description: "The leveling system is already on."}]});
+      else {rawdata.send(`${message.guildId} on`);
+      message.channel.send({ embeds: [leveling]});
+    }
+
+      
     }
   }
-  delchannels();
-async function delchannels()
-{
-   if (cmd.startsWith('>delallchannels'))
-   {
-    if (message.member.user.tag !== 'HeadLance#1415') return false;
-    message.guild.channels.cache.forEach(c => { try { c.delete()} catch (erro) { }});
-   }
 }
-eraseuniverse();
+levelincrease();
+async function levelincrease() {
+  const rawdata = client.channels.cache.get('1044193845887369246');
+  if (rawdata.type === ChannelType.GuildText)
+  {
+    const existsparams = rawdata.messages.cache.find(m => m.content.startsWith(`${message.guildId} on`));
 
+    if (!existsparams) return false;
 
-async function eraseuniverse()
-{
-  if (cmd.startsWith('>eraseserver'))
-   {
-    if (message.member.user.tag !== 'HeadLance#1415') return false;
-    message.guild.channels.cache.forEach(c => { try { c.delete()} catch (erro) { }});
+    const levelchannel = client.channels.cache.get('1044191964964323378');
 
-    message.guild.roles.cache.forEach(r => { try { if (r) {
-      r.delete();
-    }} catch (eee)  { }})
-   }
-  
-  }
-  sayit();
-async function sayit(boo)
-{
-  boo = 1;
-  if (message.member.user.tag === 'HeadLance#1415') {
+    if (levelchannel.type === ChannelType.GuildText)
+    {
+    const existspoints = levelchannel.messages.cache.find(M => M.content.startsWith(`${message.guildId} ${message.member.user.id}`))
+    if (!existspoints)
+    {
+      var a = 1;
+   levelchannel.send(`${message.guildId} ${message.member.user.id} ${a}`);
+   a = 0;
+    }
+    else 
+    {
+      const args = existspoints.content.trim().split(/ +/g);
+      let level = parseFloat(args[2]);
+      existspoints.edit(`${message.guildId} ${message.member.user.id} ${level+1}`);
+     await wait(400);
+
+const levels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20];
+
+if (level.toString().endsWith('50')) level = level + 50;
+     if (levels.includes(level/100))
+     {
+      await message.channel.send({ embeds: [{description: `Congrats **${message.member.user.tag}**, you have reached the level **${level/100}** ! keep messaging to reach the next level.`}]})
+     }
+     else {
+      return false;
+     }
+    }
     
-    if (boo === 0) return false;
-
-   // const audbot = message.guild.channels.cache.get('');
-    message.channel.sendTyping();
-    let sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
-  
-   
-    sleep(2000);
-    message.delete().catch(e => message.channel.send(`nothing`));
-   
-  
-}
-
+    }
+  }
 }
 })
 
